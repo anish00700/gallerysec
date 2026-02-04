@@ -24,7 +24,8 @@ export function GalleryGrid() {
         variants={gridVariants}
       >
         {galleryItems.map((item, index) => {
-          const layoutVariant = index === 0 || index === 3 ? "tall" : "wide";
+          // Make only one tall card (the second item), keep the rest regular.
+          const layoutVariant = index === 1 ? "tall" : "wide";
 
           return (
             <GalleryCard

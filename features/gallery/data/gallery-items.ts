@@ -4,6 +4,15 @@ import type { GalleryItem } from "../types";
 export const galleryItems: GalleryItem[] = [
   {
     id: "1",
+    title: "Team behind the scenes",
+    meta: "Office moments · Carousel",
+    thumbnail: "/images/gallery/post2.jpg",
+    caption:
+      "Behind the scenes with the edQuest team planning the next set of quests, roadmaps and community challenges.",
+    instagramUrl: "https://instagram.com/",
+  },
+  {
+    id: "2",
     title: "Interns – June 2024",
     meta: "Intern cohort highlights · 1:10",
     thumbnail: "/images/gallery/post1.jpg",
@@ -12,15 +21,6 @@ export const galleryItems: GalleryItem[] = [
     instagramUrl: "https://instagram.com/",
     mediaType: "video",
     videoUrl: "/images/gallery/Video1.MP4",
-  },
-  {
-    id: "2",
-    title: "Team behind the scenes",
-    meta: "Office moments · Carousel",
-    thumbnail: "/images/gallery/post2.jpg",
-    caption:
-      "Behind the scenes with the edQuest team planning the next set of quests, roadmaps and community challenges.",
-    instagramUrl: "https://instagram.com/",
   },
   {
     id: "3",
@@ -51,6 +51,15 @@ export const galleryItems: GalleryItem[] = [
   },
   {
     id: "6",
+    title: "Community moments",
+    meta: "Meetups & hackathons · Grid",
+    thumbnail: "/images/gallery/post1.jpg",
+    caption:
+      "Community meetups, hackathon winners and the people who keep the edQuest ecosystem buzzing with ideas.",
+    instagramUrl: "https://instagram.com/",
+  },
+  {
+    id: "7",
     title: "Community moments",
     meta: "Meetups & hackathons · Grid",
     thumbnail: "/images/gallery/post1.jpg",
