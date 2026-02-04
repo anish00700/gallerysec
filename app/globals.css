@@ -24,3 +24,36 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Puzzle-style gallery cards */
+.puzzle-card {
+  position: relative;
+  border-radius: 1.9rem;
+  overflow: hidden;
+}
+
+.puzzle-card--tab-right::after {
+  content: "";
+  position: absolute;
+  right: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: #ffffff; /* card color */
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.06);
+}
+
+.puzzle-card--indent-left::before {
+  content: "";
+  position: absolute;
+  left: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: #e0e1e8; /* page background so it looks cut out */
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.06);
+}
