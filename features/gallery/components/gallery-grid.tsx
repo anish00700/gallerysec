@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { galleryItems } from "../data/gallery-items";
-import type { GalleryItem } from "../types";
 import { GalleryCard } from "./gallery-card";
 import { GalleryModal } from "./gallery-modal";
 
@@ -23,18 +22,14 @@ export function GalleryGrid() {
         className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 px-4 pb-8 pt-2 md:px-8 md:pb-12"
         variants={gridVariants}
       >
-        {galleryItems.map((item, index) => {
-          const layoutVariant = index === 0 || index === 3 ? "tall" : "wide";
-
-          return (
-            <GalleryCard
-              key={item.id}
-              item={item}
-              layoutVariant={item.layout}
-              onOpen={() => setActiveIndex(index)}
-            />
-          );
-        })}
+        {galleryItems.map((item, index) => (
+          <GalleryCard
+            key={item.id}
+            item={item}
+            layoutVariant={item.layout}
+            onOpen={() => setActiveIndex(index)}
+          />
+        ))}
       </motion.div>
 
       <GalleryModal
