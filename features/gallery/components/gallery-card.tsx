@@ -26,8 +26,8 @@ export function GalleryCard({ item, layoutVariant, onOpen }: GalleryCardProps) {
       variants={cardVariants}
       whileHover={{ y: -4, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
-      className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-[1.9rem] bg-white shadow-[0_14px_32px_rgba(15,23,42,0.10)] border border-slate-200/80 ${
-        isTall ? "row-span-2 aspect-[3/5]" : "aspect-[5/4]"
+      className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-[1.9rem] bg-white shadow-[0_14px_32px_rgba(15,23,42,0.10)] border border-slate-200/80 group-hover:border-transparent ${
+        isTall ? "row-span-2 aspect-[5/9]" : "aspect-[7/6]"
       }`}
       onClick={onOpen}
     >
@@ -66,12 +66,12 @@ export function GalleryCard({ item, layoutVariant, onOpen }: GalleryCardProps) {
             target="_blank"
             rel="noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="truncate font-medium underline-offset-2 hover:underline"
+            className="truncate pl-1 font-medium underline-offset-2 hover:underline"
           >
             View on Instagram
           </a>
         ) : (
-          <span className="truncate font-medium">View on Instagram</span>
+          <span className="truncate pl-1 font-medium">View on Instagram</span>
         )}
         <span className="text-[10px] tracking-[0.14em] text-slate-700">
           @edquest.pro

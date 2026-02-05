@@ -9,5 +9,6 @@ export type GalleryItem = {
   instagramUrl?: string;
   mediaType?: MediaType;
   videoUrl?: string;
+  layout?: "tall" | "wide";
 };
 

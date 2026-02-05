@@ -25,16 +25,13 @@ export default function GalleryPage() {
         animate="show"
         variants={containerVariants}
       >
-        <header className="flex flex-col gap-4 pb-6 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h1 className="text-3xl md:text-[2.7rem] font-thin tracking-tight text-slate-900 leading-tight">
-              Our <span className="font-extrabold text-slate-900">Gallery</span>
-            </h1>
-            <p className="mt-2 mb-8 max-w-xl text-sm md:text-base text-slate-700">
-              Moments from events, cohorts, and wins – curated straight from our
-              Instagram feed so it feels just like the rest of edQuest.
-            </p>
-          </div>
+        <header className="flex flex-col items-center gap-3 pb-6 text-center">
+          <h1 className="text-3xl md:text-[2.7rem] font-thin tracking-tight text-slate-900 leading-tight">
+            Our <span className="font-semibold text-slate-900">Gallery</span>
+          </h1>
+          <p className="mt-2 mb-6 max-w-2xl text-sm md:text-base text-slate-700">
+          Moments from our events, cohorts, and wins — thoughtfully curated to reflect the edQuest journey.
+          </p>
         </header>
 
         <GalleryGrid />

@@ -1,9 +1,17 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import type { GalleryItem } from "../types";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 type GalleryModalProps = {
-  item: GalleryItem | null;
+  items: GalleryItem[];
+  activeIndex: number | null;
   isOpen: boolean;
   onClose: () => void;
 };
@@ -25,81 +33,133 @@ const dialogVariants = {
   exit: { opacity: 0, scale: 0.96, y: 12 },
 };
 
-export function GalleryModal({ item, isOpen, onClose }: GalleryModalProps) {
+export function GalleryModal({
+  items,
+  activeIndex,
+  isOpen,
+  onClose,
+}: GalleryModalProps) {
+  if (activeIndex === null) return null;
+
   return (
     <AnimatePresence>
-      {isOpen && item && (
+      {isOpen && (
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
           initial="hidden"
           animate="show"
           exit="exit"
           variants={backdropVariants}
-          onClick={onClose}
         >
-          <motion.div
-            className="relative flex w-full max-w-3xl md:h-[520px] flex-col overflow-hidden rounded-[2rem] bg-[#f4f4ff] shadow-2xl md:flex-row"
-            variants={dialogVariants}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Media */}
-            <div className="relative h-72 w-full md:h-full md:w-1/2">
-              {item.mediaType === "video" && item.videoUrl ? (
-                <video
-                  className="h-full w-full object-cover"
-                  src={item.videoUrl}
-                  controls
-                  autoPlay
-                  playsInline
-                />
-              ) : (
-                <Image
-                  src={item.thumbnail}
-                  alt={item.title}
-                  fill
-                  className="object-cover"
-                />
-              )}
-            </div>
+          {/* Clickable backdrop layer */}
+          <div
+            className="absolute inset-0"
+            onClick={onClose}
+          />
 
-            {/* Caption */}
-            <div className="flex w-full flex-col p-5 md:w-1/2 md:p-7">
-              <div className="flex flex-1 flex-col">
-                <div className="flex items-start justify-between gap-4">
-                  <h2 className="text-lg font-semibold text-slate-900 md:text-xl">
-                    {item.title}
-                  </h2>
-                  <motion.button
-                    type="button"
-                    whileHover={{ scale: 1.08, rotate: 8, backgroundColor: "#ffcc65" }}
-                    whileTap={{ scale: 0.92, rotate: -4, backgroundColor: "#ffb843" }}
-                    onClick={onClose}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#ffe49b] text-slate-900 text-sm shadow-md border border-amber-200"
-                    aria-label="Close"
-                  >
-                    ×
-                  </motion.button>
-                </div>
+          {/* Wrapper so arrows can float outside the modal box */}
+          <div className="relative z-10 flex w-full items-center justify-center">
+            {/* Floating arrows (siblings of modal box) */}
+            <Carousel
+              opts={{
+                startIndex: activeIndex,
+                loop: true,
+                duration: 40, // slower, smoother slide animation
+              }}
+              className="relative w-full max-w-4xl px-2 sm:px-4"
+            >
+              <CarouselPrevious
+                aria-label="Previous post"
+                className="absolute left-2 top-1/2 z-50 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-slate-900 shadow-md backdrop-blur-md hover:bg-white md:-left-16 md:h-12 md:w-12"
+              />
+              <CarouselNext
+                aria-label="Next post"
+                className="absolute right-2 top-1/2 z-50 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-slate-900 shadow-md backdrop-blur-md hover:bg-white md:-right-16 md:h-12 md:w-12"
+              />
 
-                <p className="mt-4 text-sm leading-relaxed text-slate-700 text-left">
-                  {item.caption}
-                </p>
-              </div>
+              {/* Modal box (your existing layout) */}
+              <motion.div
+                className="relative flex w-full max-h-[90vh] overflow-hidden rounded-[1.9rem] bg-[#f4f4ff] shadow-2xl"
+                variants={dialogVariants}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Slides */}
+                <CarouselContent>
+                  {items.map((item) => (
+                    <CarouselItem key={item.id}>
+                      <div className="flex w-full flex-col md:h-[520px] overflow-hidden md:flex-row">
+                        {/* Media */}
+                        <div className="relative h-72 w-full md:h-full md:w-1/2">
+                          {item.mediaType === "video" && item.videoUrl ? (
+                            <video
+                              className="h-full w-full object-cover"
+                              src={item.videoUrl}
+                              controls
+                              autoPlay
+                              playsInline
+                            />
+                          ) : (
+                            <Image
+                              src={item.thumbnail}
+                              alt={item.title}
+                              fill
+                              className="object-cover"
+                            />
+                          )}
+                        </div>
 
-              {item.instagramUrl && (
-                <div className="mt-6 flex justify-end text-xs text-slate-500">
-                  <a
-                    href={item.instagramUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-full bg-[#ffe49b] px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-900 text-center shadow-sm border border-amber-200 transition-colors hover:bg-[#ffcc65]"
-                  >
-                    View on Instagram
-                  </a>
-                </div>
-              )}
-            </div>
-          </motion.div>
+                        {/* Caption */}
+                        <div className="flex w-full flex-col p-5 md:w-1/2 md:p-7">
+                          <div className="flex flex-1 flex-col">
+                            <div className="flex items-start justify-between gap-4">
+                              <h2 className="text-lg font-semibold text-slate-900 md:text-xl">
+                                {item.title}
+                              </h2>
+                              <motion.button
+                                type="button"
+                                whileHover={{
+                                  scale: 1.08,
+                                  rotate: 8,
+                                  backgroundColor: "#ffcc65",
+                                }}
+                                whileTap={{
+                                  scale: 0.92,
+                                  rotate: -4,
+                                  backgroundColor: "#ffb843",
+                                }}
+                                onClick={onClose}
+                                className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-amber-200 bg-[#ffe49b] text-sm text-slate-900 shadow-md"
+                                aria-label="Close"
+                              >
+                                ×
+                              </motion.button>
+                            </div>
+
+                            <p className="mt-4 text-sm leading-relaxed text-slate-700 text-left">
+                              {item.caption}
+                            </p>
+                          </div>
+
+                          {item.instagramUrl && (
+                            <div className="mt-6 flex justify-end text-xs text-slate-500">
+                              <a
+                                href={item.instagramUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="rounded-full border border-amber-200 bg-[#ffe49b] px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-900 text-center shadow-sm transition-colors hover:bg-[#ffcc65]"
+                              >
+                                View on Instagram
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </motion.div>
+            </Carousel>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

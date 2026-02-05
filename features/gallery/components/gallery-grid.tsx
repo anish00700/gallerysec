@@ -15,7 +15,7 @@ const gridVariants = {
 };
 
 export function GalleryGrid() {
-  const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
     <>
@@ -24,25 +24,27 @@ export function GalleryGrid() {
         variants={gridVariants}
       >
         {galleryItems.map((item, index) => {
-          // Make only one tall card (the second item), keep the rest regular.
-          const layoutVariant = index === 1 ? "tall" : "wide";
+          const layoutVariant = index === 0 || index === 3 ? "tall" : "wide";
 
           return (
             <GalleryCard
               key={item.id}
               item={item}
-              layoutVariant={layoutVariant}
-              onOpen={() => setActiveItem(item)}
+              layoutVariant={item.layout}
+              onOpen={() => setActiveIndex(index)}
             />
           );
         })}
       </motion.div>
 
       <GalleryModal
-        item={activeItem}
-        isOpen={!!activeItem}
-        onClose={() => setActiveItem(null)}
+        items={galleryItems}
+        activeIndex={activeIndex}
+        isOpen={activeIndex !== null}
+        onClose={() => setActiveIndex(null)}
       />
+
+
     </>
   );
 }
