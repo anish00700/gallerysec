@@ -1,7 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { GalleryItem } from "../types";
 import {
+  type CarouselApi,
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -39,11 +41,57 @@ export function GalleryModal({
   isOpen,
   onClose,
 }: GalleryModalProps) {
-  if (activeIndex === null) return null;
+  const hasActiveItem = activeIndex !== null;
+
+  const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(activeIndex ?? 0);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  // Sync currentIndex with carousel selection
+  useEffect(() => {
+    if (!carouselApi) return;
+
+    const handleSelect = () => {
+      setCurrentIndex(carouselApi.selectedScrollSnap());
+    };
+
+    handleSelect();
+    carouselApi.on("select", handleSelect);
+
+    return () => {
+      carouselApi.off("select", handleSelect);
+    };
+  }, [carouselApi]);
+
+  // Autoplay only the active video's slide, pause others
+  useEffect(() => {
+    if (!isOpen || !hasActiveItem) {
+      videoRefs.current.forEach((video) => {
+        if (!video) return;
+        video.pause();
+        video.currentTime = 0;
+      });
+      return;
+    }
+
+    videoRefs.current.forEach((video, index) => {
+      if (!video) return;
+
+      if (index === currentIndex && items[index]?.mediaType === "video") {
+        video.muted = false;
+        void video.play().catch(() => {
+          // ignore autoplay blocking errors
+        });
+      } else {
+        video.pause();
+        video.currentTime = 0;
+      }
+    });
+  }, [currentIndex, isOpen, hasActiveItem, items]);
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isOpen && hasActiveItem && (
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
           initial="hidden"
@@ -62,10 +110,11 @@ export function GalleryModal({
             {/* Floating arrows (siblings of modal box) */}
             <Carousel
               opts={{
-                startIndex: activeIndex,
+                startIndex: activeIndex ?? 0,
                 loop: true,
                 duration: 40, // slower, smoother slide animation
               }}
+              setApi={setCarouselApi}
               className="relative w-full max-w-4xl px-2 sm:px-4 pointer-events-auto"
             >
               <CarouselPrevious
@@ -85,17 +134,19 @@ export function GalleryModal({
               >
                 {/* Slides */}
                 <CarouselContent>
-                  {items.map((item) => (
+                  {items.map((item, index) => (
                     <CarouselItem key={item.id}>
                       <div className="flex w-full flex-col md:h-[520px] overflow-hidden md:flex-row">
                         {/* Media */}
                         <div className="relative h-72 w-full md:h-full md:w-1/2">
                           {item.mediaType === "video" && item.videoUrl ? (
                             <video
+                              ref={(el) => {
+                                videoRefs.current[index] = el;
+                              }}
                               className="h-full w-full object-cover"
                               src={item.videoUrl}
                               controls
-                              autoPlay
                               playsInline
                             />
                           ) : (
