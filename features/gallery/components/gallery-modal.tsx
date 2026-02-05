@@ -58,7 +58,7 @@ export function GalleryModal({
           />
 
           {/* Wrapper so arrows can float outside the modal box */}
-          <div className="relative z-10 flex w-full items-center justify-center">
+          <div className="relative z-10 flex items-center justify-center pointer-events-none">
             {/* Floating arrows (siblings of modal box) */}
             <Carousel
               opts={{
@@ -66,7 +66,7 @@ export function GalleryModal({
                 loop: true,
                 duration: 40, // slower, smoother slide animation
               }}
-              className="relative w-full max-w-4xl px-2 sm:px-4"
+              className="relative w-full max-w-4xl px-2 sm:px-4 pointer-events-auto"
             >
               <CarouselPrevious
                 aria-label="Previous post"
