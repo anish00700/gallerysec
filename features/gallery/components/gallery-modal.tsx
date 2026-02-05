@@ -70,6 +70,8 @@ export function GalleryModal({
         if (!video) return;
         video.pause();
         video.currentTime = 0;
+        video.removeAttribute("src");
+        video.load();
       });
       return;
     }
